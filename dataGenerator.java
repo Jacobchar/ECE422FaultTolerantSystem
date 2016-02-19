@@ -34,6 +34,7 @@ public class dataGenerator {
       BufferedWriter bw = new BufferedWriter(fw);
       for(int i = 0; i < data.size(); i++){
         bw.write(data.get(i).toString());
+        bw.write(" ");
       }
 
       bw.flush();
