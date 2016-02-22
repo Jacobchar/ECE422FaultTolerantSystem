@@ -1,6 +1,12 @@
 import java.util.*;
 import java.io.*;
 
+/* Program that sorts the given inputFileName.txt integer list using a heapsort */
+/* algorithm and stores the values in a given outputFileName.txt                */
+/**/
+/**/
+/**/
+/* Jacob Charlebois, February 2016 */
 public class dataSorter {
 
 	public static void main(String[] args) throws IOException{
@@ -26,7 +32,7 @@ public class dataSorter {
 	}
 
 	// The following three methods heapSort, heapify, and sift sort the data using
-	// the heapsort algorithm
+	// the heapsort algorithm (Grabbed from an old coding assignment)
 	private static void heapSort(ArrayList<Integer> data){
 		int count = data.size();
 		heapify(data, count);
@@ -67,6 +73,7 @@ public class dataSorter {
 		}
 	}
 
+	/* Reads the list of integers from the given filename and stores them in an ArrayList */
 	private static ArrayList<Integer> readFile(String filename) throws FileNotFoundException{
 
 		ArrayList<Integer> dataList = new ArrayList<Integer>();
@@ -78,7 +85,7 @@ public class dataSorter {
 		return dataList;
 	}
 
-
+ 	/* Writes the list of integers to a specified file */
     private static void writeFile(ArrayList<Integer> data, String filename) throws IOException {
 
       File file = new File(filename);

@@ -3,6 +3,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+/* Java code to generate a random list of integers valued from 0-1000 */
+/* and then print those values to a filename.txt file                 */
+/* Jacob Charlebois, February 2016 */
 public class dataGenerator {
 
     public static void main(String[] args) throws IOException{
@@ -22,6 +25,7 @@ public class dataGenerator {
 
     }
 
+    /* Writes the list of integers to a file with the name given as an argument */
     private static void writeFile(ArrayList<Integer> data, String filename) throws IOException {
 
       File file = new File(filename);
