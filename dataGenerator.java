@@ -15,9 +15,9 @@ public class dataGenerator {
     private static void generateList(ArrayList<Integer> data, int numValues){
       
       Random random = new Random();
-      // Generates a list of "numValues" random integers from 1-10000
+      // Generates a list of "numValues" random integers from 1-1000
       for(int i = 0; i < numValues; i++){
-        data.add(i, random.nextInt(10000));
+        data.add(i, random.nextInt(1000));
       }
 
     }
