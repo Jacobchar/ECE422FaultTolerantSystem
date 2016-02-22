@@ -11,7 +11,7 @@ public class dataSorter {
 		Integer probSecFail = Integer.parseInt(args[3]);
 		Integer timeLimit = Integer.parseInt(args[4]);
 
-		int[] dataList = readFile(inputFileName);
+		ArrayList<Integer> dataList = readFile(inputFileName);
 
 		//Multi threaded elements
 		//Primary variant: Java Heapsort
@@ -27,21 +27,21 @@ public class dataSorter {
 
 	// The following three methods heapSort, heapify, and sift sort the data using
 	// the heapsort algorithm
-	private static void heapSort(int[] data){
-		int count = data.length;
+	private static void heapSort(ArrayList<Integer> data){
+		int count = data.size();
 		heapify(data, count);
 		int end = count - 1;
 		while (end > 0) {
-			int temp = data[end];
-			data[end] = data[0];
-			data[0] = temp;
+			int swap = data.get(0);
+			data.set(0, data.get(end));
+			data.set(end, swap);
 			sift(data, 0, end - 1);
 			end--;
 
 		}
 	}
 
-	public static void heapify(int[] unsorted, int count) {
+	public static void heapify(ArrayList<Integer> unsorted, int count) {
 		int start = (count - 2) / 2;
 			while (start >= 0) {
 				sift(unsorted, start, count - 1);
@@ -49,39 +49,37 @@ public class dataSorter {
 			}	
 	}
 
-	public static void sift(int[] unsorted, int start, int end) {
+	public static void sift(ArrayList<Integer> unsorted, int start, int end) {
 		int root = start;
 		while ((root * 2 + 1) <= end) {
 			int leftchild = root * 2 + 1;
 
-			if ((leftchild + 1 <= end) && (unsorted[leftchild]) < unsorted[leftchild + 1]) {
+			if ((leftchild + 1 <= end) && (unsorted.get(leftchild) < unsorted.get(leftchild + 1))) {
 				leftchild = leftchild + 1;
 			}
-			if (unsorted[root] < unsorted[leftchild]) {
-				int temp = unsorted[root];
-				unsorted[root] = unsorted[leftchild];
-				unsorted[leftchild] = temp;
+			if (unsorted.get(root) < unsorted.get(leftchild)) {
+				int temp = unsorted.get(root);
+				unsorted.set(root, unsorted.get(leftchild));
+				unsorted.set(leftchild, temp);
 				root = leftchild;
 			}
 			else return;
 		}
 	}
 
-	private static int[] readFile(String filename) throws FileNotFoundException{
+	private static ArrayList<Integer> readFile(String filename) throws FileNotFoundException{
 
-		int[] dataList = new int[1000];
-		int i = 0;
+		ArrayList<Integer> dataList = new ArrayList<Integer>();
 		Scanner s = new Scanner(new File(filename));
 		while (s.hasNext()){
-			dataList[i] = Integer.parseInt(s.next());
-			i ++;
+			dataList.add(Integer.parseInt(s.next()));
 		}
 
 		return dataList;
 	}
 
 
-    private static void writeFile(int[] data, String filename) throws IOException {
+    private static void writeFile(ArrayList<Integer> data, String filename) throws IOException {
 
       File file = new File(filename);
 
@@ -91,8 +89,8 @@ public class dataSorter {
 
       FileWriter fw = new FileWriter(file);
       BufferedWriter bw = new BufferedWriter(fw);
-      for(int i = 0; i < data.length; i++){
-        bw.write(data[i]);
+      for(int i = 0; i < data.size(); i++){
+        bw.write(data.get(i).toString());
         bw.write(" ");
       }
 
