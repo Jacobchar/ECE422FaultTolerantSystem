@@ -41,6 +41,18 @@ public class dataSorter {
 		//Adjudicator (Executive thread)
 	}
 
+
+	/* This program ensures that the data we have sorted is in ascending order */
+	private static boolean acceptanceTest(ArrayList<Integer> data){
+
+		for(int i = 0; i < data.size() - 1; i++){
+			if (data.get(i) > data.get(i + 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/* This method calculates whether or not our program while run the primary or */
 	/* secondary variant given the input of the probability of failure */
 	private static boolean calculateFailure(Double hazard){
