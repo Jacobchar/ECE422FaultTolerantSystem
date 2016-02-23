@@ -13,26 +13,50 @@ public class dataSorter {
 			
 		String inputFileName = args[0];
 		String outputFileName = args[1];
-		Integer probPrimFail = Integer.parseInt(args[2]);
-		Integer probSecFail = Integer.parseInt(args[3]);
+		Double probPrimFail = Double.parseDouble(args[2]);
+		Double probSecFail = Double.parseDouble(args[3]);
 		Integer timeLimit = Integer.parseInt(args[4]);
 
 		ArrayList<Integer> dataList = readFile(inputFileName);
 
+		if(calculateFailure(probPrimFail)){
+			heapSort(dataList);	
+			writeFile(dataList, outputFileName);
+		} else if (calculateFailure(probSecFail)){
+			System.out.println("Primary variant failed, attempting secondary . . .");
+			// insertion sort from native method in C
+			System.out.println("Success!");
+		} else {
+			System.out.println("Both variants have failed \nTerminating program.");
+			File file = new File(outputFileName);
+			if(file.exists()) {
+				file.delete();
+			}
+		}
 		//Multi threaded elements
 		//Primary variant: Java Heapsort
 		//Backup variant: Insertion sort algorithm in C
 		//Executive variant:
 		//WatchdogTimer
 		//Adjudicator (Executive thread)
-
-		heapSort(dataList);
-			
-		writeFile(dataList, outputFileName);
 	}
 
-	// The following three methods heapSort, heapify, and sift sort the data using
-	// the heapsort algorithm (Grabbed from an old coding assignment)
+	/* This method calculates whether or not our program while run the primary or */
+	/* secondary variant given the input of the probability of failure */
+	private static boolean calculateFailure(Double hazard){
+		// My program only accesses memory once (when reading the file) and so,
+		// according assignment sheet, failure is calculated as follows
+		Double probFailure = Math.random();//Math.random();
+
+		if(probFailure > 0.5 && probFailure < (0.5 + hazard)){
+			return false; // Variant has failed
+		} else {
+			return true; //variant has succeeded
+		}
+	}
+
+	/* The following three methods heapSort, heapify, and sift sort the data using */
+	/* the heapsort algorithm (Grabbed from an old coding assignment) */
 	private static void heapSort(ArrayList<Integer> data){
 		int count = data.size();
 		heapify(data, count);
