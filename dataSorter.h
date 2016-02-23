@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     dataSorter
  * Method:    insertionSort
- * Signature: ([II)[I
+ * Signature: ([I)[I
  */
 JNIEXPORT jintArray JNICALL Java_dataSorter_insertionSort
-  (JNIEnv *, jclass, jintArray, jint);
+  (JNIEnv *, jclass, jintArray);
 
 #ifdef __cplusplus
 }

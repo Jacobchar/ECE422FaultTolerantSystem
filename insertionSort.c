@@ -9,12 +9,14 @@ int[] insertionSort(jint *, int);
 /* Insertion Sort algorithm */
 
 JNIEXPORT jintArray JNICALL Java_dataSorter_insertionSort
-  (JNIEnv *env, jclass class, jintArray array, jint length){
+  (JNIEnv *env, jclass class, jintArray array){
 
-  	jintArray intArray;
+    jsize = len;
   	jint *myCopy;
+    jintArray sortedArray;
   	jboolean *is_copy =0;
 
+    len = (*env)->GetArrayLength(env, buf);
   	myCopy = (jint *) (*env)->GetIntArrayElements(env, array, is_copy);
   	if (myCopy == NUL){
   		printf("Cannot obtain array from JVM\n");
