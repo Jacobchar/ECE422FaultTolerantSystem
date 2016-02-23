@@ -24,8 +24,7 @@ public class dataSorter {
 			writeFile(dataList, outputFileName);
 		} else if (calculateFailure(probSecFail)){
 			System.out.println("Primary variant failed, attempting secondary . . .");
-			int[] data = makeIntArray(dataList);
-			// insertion sort from native method in C
+			int[] data = new dataSorter().insertionSort(makeIntArray(dataList), dataList.size());
 			dataList = makeArrayList(data);
 			System.out.println("Success!");
 		} else {
@@ -43,6 +42,8 @@ public class dataSorter {
 		//Adjudicator (Executive thread)
 	}
 
+	/* Initialiszation of our native method to be called in our c program */
+	public static native int[] insertionSort(int[] buf, int length);
 
 	/* Method to pass an int array to our JNI called method */
 	private static int[] makeIntArray(ArrayList<Integer> data) {
