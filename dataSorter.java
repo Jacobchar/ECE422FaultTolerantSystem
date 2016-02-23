@@ -24,7 +24,9 @@ public class dataSorter {
 			writeFile(dataList, outputFileName);
 		} else if (calculateFailure(probSecFail)){
 			System.out.println("Primary variant failed, attempting secondary . . .");
+			int[] data = makeIntArray(dataList);
 			// insertion sort from native method in C
+			dataList = makeArrayList(data);
 			System.out.println("Success!");
 		} else {
 			System.out.println("Both variants have failed \nTerminating program.");
@@ -42,7 +44,26 @@ public class dataSorter {
 	}
 
 
-	/* This program ensures that the data we have sorted is in ascending order */
+	/* Method to pass an int array to our JNI called method */
+	private static int[] makeIntArray(ArrayList<Integer> data) {
+		int[] array = new int[data.size()];
+		for(int i = 0; i < data.size(); i++){
+			array[i] = data.get(i);
+		}
+		return array;
+	}
+
+	/* Method to pass an int array to our JNI called method */
+	private static ArrayList<Integer> makeArrayList(int[] data) {
+		ArrayList<Integer> array = new ArrayList<Integer>();
+		for(int i = 0; i < data.length; i++){
+			array.set(i, data[i]);
+		}
+		return array;
+	}
+
+
+	/* This method ensures that the data we have sorted is in ascending order */
 	private static boolean acceptanceTest(ArrayList<Integer> data){
 
 		for(int i = 0; i < data.size() - 1; i++){

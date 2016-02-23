@@ -24,7 +24,7 @@ int[] insertionSort(jint *list, int length){
 	for(size_t i = 1; i < length; i++) {
 		int temp = list[i];
 		size_t j = i;
-		while(j > 0 && tmp < list[j - 1])  {
+		while(j > 0 && temp < list[j - 1])  {
 			list[j] = list[j - 1];
 			j --;
 		}
