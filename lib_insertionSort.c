@@ -8,8 +8,8 @@
 int[] insertionSort(jint *, int);
 /* Insertion Sort algorithm */
 
-JNIEXPORT jintArray JNICALL Java_dataSorter_insertionSort
-  (JNIEnv *env, jclass class, jintArray array){
+JNIEXPORT jintArray JNICALL Java_InsertionSort_insertionSort
+  (JNIEnv *env, jobject obj, jintArray buf, jdouble prob);{
 
     jsize = len;
   	jint *myCopy;

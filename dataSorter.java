@@ -7,9 +7,9 @@ import java.io.*;
 /**/
 /**/
 /* Jacob Charlebois, February 2016 */
-public class dataSorter {
+public class DataSorter {
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 			
 		String inputFileName = args[0];
 		String outputFileName = args[1];
@@ -19,14 +19,39 @@ public class dataSorter {
 
 		ArrayList<Integer> dataList = readFile(inputFileName);
 
-		if(calculateFailure(probPrimFail)){
-			heapSort(dataList);	
-			writeFile(dataList, outputFileName);
-		} else if (calculateFailure(probSecFail)){
+		Boolean primaryPass = null;
+		Boolean secondaryPass = null;
+
+		HeapSort primary = new HeapSort(dataList, probPrimFail);
+		Timer t = new Timer();
+		Watchdog fido = new Watchdog(primary);
+		t.schedule(fido, timeLimit.longValue());
+		try {
+			primary.start();
+		} catch (ThreadDeath td) {
+			System.out.println("Primary variant timed out.\n");
+			primaryPass = false;
+		}
+
+		ArrayList<Integer> sortedData = primary.getData();
+
+		if(!acceptanceTest(sortedData)) {
 			System.out.println("Primary variant failed, attempting secondary . . .");
-			int[] data = new dataSorter().insertionSort(makeIntArray(dataList));
-			dataList = makeArrayList(data);
-			System.out.println("Success!");
+			// Run secondary variant
+			int[] list = makeIntArray(dataList);
+			InsertionSort secondary = new InsertionSort (list, probSecFail);
+			t = new Timer();
+			fido = new Watchdog(secondary);
+			t.schedule(fido, timeLimit.longValue());
+			try {
+				secondary.start();
+			} catch (ThreadDeath td) {
+				sortedData = makeArrayList(secondary.getData());				
+			}
+		}
+
+		if(acceptanceTest(sortedData)) {
+			writeFile(sortedData, outputFileName);
 		} else {
 			System.out.println("Both variants have failed \nTerminating program.");
 			File file = new File(outputFileName);
@@ -42,9 +67,6 @@ public class dataSorter {
 		//Adjudicator (Executive thread)
 	}
 
-	/* Initialiszation of our native method to be called in our c program */
-	public static native int[] insertionSort(int[] buf);
-
 	/* Method to pass an int array to our JNI called method */
 	private static int[] makeIntArray(ArrayList<Integer> data) {
 		int[] array = new int[data.size()];
@@ -57,7 +79,7 @@ public class dataSorter {
 	/* Method to pass an int array to our JNI called method */
 	private static ArrayList<Integer> makeArrayList(int[] data) {
 		ArrayList<Integer> array = new ArrayList<Integer>();
-		for(int i = 0; i < data.length; i++){
+		for(int i = 0; i < data.length; i++) {
 			array.set(i, data[i]);
 		}
 		return array;
@@ -65,9 +87,8 @@ public class dataSorter {
 
 
 	/* This method ensures that the data we have sorted is in ascending order */
-	private static boolean acceptanceTest(ArrayList<Integer> data){
-
-		for(int i = 0; i < data.size() - 1; i++){
+	private static boolean acceptanceTest(ArrayList<Integer> data) {
+		for(int i = 0; i < data.size() - 1; i++) {
 			if (data.get(i) > data.get(i + 1)) {
 				return false;
 			}
@@ -77,66 +98,23 @@ public class dataSorter {
 
 	/* This method calculates whether or not our program while run the primary or */
 	/* secondary variant given the input of the probability of failure */
-	private static boolean calculateFailure(Double hazard){
+	private static boolean calculateFailure(Double hazard) {
 		// My program only accesses memory once (when reading the file) and so,
 		// according assignment sheet, failure is calculated as follows
 		Double probFailure = Math.random();//Math.random();
 
-		if(probFailure > 0.5 && probFailure < (0.5 + hazard)){
+		if(probFailure > 0.5 && probFailure < (0.5 + hazard)) {
 			return false; // Variant has failed
 		} else {
 			return true; //variant has succeeded
 		}
 	}
 
-	/* The following three methods heapSort, heapify, and sift sort the data using */
-	/* the heapsort algorithm (Grabbed from an old coding assignment) */
-	private static void heapSort(ArrayList<Integer> data){
-		int count = data.size();
-		heapify(data, count);
-		int end = count - 1;
-		while (end > 0) {
-			int swap = data.get(0);
-			data.set(0, data.get(end));
-			data.set(end, swap);
-			sift(data, 0, end - 1);
-			end--;
-
-		}
-	}
-
-	public static void heapify(ArrayList<Integer> unsorted, int count) {
-		int start = (count - 2) / 2;
-			while (start >= 0) {
-				sift(unsorted, start, count - 1);
-				start --;
-			}	
-	}
-
-	public static void sift(ArrayList<Integer> unsorted, int start, int end) {
-		int root = start;
-		while ((root * 2 + 1) <= end) {
-			int leftchild = root * 2 + 1;
-
-			if ((leftchild + 1 <= end) && (unsorted.get(leftchild) < unsorted.get(leftchild + 1))) {
-				leftchild = leftchild + 1;
-			}
-			if (unsorted.get(root) < unsorted.get(leftchild)) {
-				int temp = unsorted.get(root);
-				unsorted.set(root, unsorted.get(leftchild));
-				unsorted.set(leftchild, temp);
-				root = leftchild;
-			}
-			else return;
-		}
-	}
-
 	/* Reads the list of integers from the given filename and stores them in an ArrayList */
-	private static ArrayList<Integer> readFile(String filename) throws FileNotFoundException{
-
+	private static ArrayList<Integer> readFile(String filename) throws FileNotFoundException {
 		ArrayList<Integer> dataList = new ArrayList<Integer>();
 		Scanner s = new Scanner(new File(filename));
-		while (s.hasNext()){
+		while (s.hasNext()) {
 			dataList.add(Integer.parseInt(s.next()));
 		}
 
@@ -145,23 +123,19 @@ public class dataSorter {
 
  	/* Writes the list of integers to a specified file */
     private static void writeFile(ArrayList<Integer> data, String filename) throws IOException {
-
       File file = new File(filename);
 
-      if(!file.exists()){
+      if(!file.exists()) {
         file.createNewFile();
       }
 
       FileWriter fw = new FileWriter(file);
       BufferedWriter bw = new BufferedWriter(fw);
-      for(int i = 0; i < data.size(); i++){
+      for(int i = 0; i < data.size(); i++) {
         bw.write(data.get(i).toString());
         bw.write(" ");
       }
-
       bw.flush();
       bw.close();
-
     }
-
 }
