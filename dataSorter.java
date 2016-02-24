@@ -46,8 +46,10 @@ public class DataSorter {
 			try {
 				secondary.start();
 			} catch (ThreadDeath td) {
-				sortedData = makeArrayList(secondary.getData());				
+				System.out.println("Secondary variant timed out.\n");
+				secondaryPass = false;					
 			}
+			sortedData = makeArrayList(secondary.getData());
 		}
 
 		if(acceptanceTest(sortedData)) {
