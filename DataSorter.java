@@ -76,6 +76,7 @@ public class DataSorter {
 
 		if(acceptanceTest(sortedData) && !timeout && (primaryPass || secondaryPass)) {
 			writeFile(sortedData, outputFileName);
+			System.out.println("File has been correctly sorted.");
 		} else {
 			System.out.println("Both variants have failed \nTerminating program.");
 			File file = new File(outputFileName);
