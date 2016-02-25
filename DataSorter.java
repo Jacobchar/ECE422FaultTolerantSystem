@@ -1,16 +1,16 @@
 import java.util.*;
 import java.io.*;
 
-/* Program that sorts the given inputFileName.txt integer list using a heapsort */
-/* algorithm and stores the values in a given outputFileName.txt                */
-/**/
-/**/
-/**/
+/* Program that sorts the given inputFileName.txt integer list using either a heapsort */
+/* algorithm or an insertion sort algorithm given the probabilities of the variants */
+/* on the failure or success of the variants the sorted list is then stored in */
+/* outputFileName.txt This program takes advantage of threads as well as a Watchdog timer */
+
 /* Jacob Charlebois, February 2016 */
 public class DataSorter {
 
 	public static void main(String[] args) throws IOException {
-			
+		
 		String inputFileName = args[0];
 		String outputFileName = args[1];
 		Double probPrimFail = Double.parseDouble(args[2]);
@@ -19,6 +19,7 @@ public class DataSorter {
 
 		ArrayList<Integer> dataList = readFile(inputFileName);
 
+		// Set these conditions so we know whether or not our variants "fail"
 		Boolean primaryPass = null;
 		Boolean secondaryPass = null;
 		Boolean timeout = false;
@@ -94,7 +95,7 @@ public class DataSorter {
 		return array;
 	}
 
-	/* Method to pass an int array to our JNI called method */
+	/* Method to get an arraylist from our JNI native method */
 	private static ArrayList<Integer> makeArrayList(int[] data) {
 		ArrayList<Integer> array = new ArrayList<Integer>();
 		for(int i = 0; i < data.length; i++) {
@@ -102,7 +103,6 @@ public class DataSorter {
 		}
 		return array;
 	}
-
 
 	/* This method ensures that the data we have sorted is in ascending order */
 	private static boolean acceptanceTest(ArrayList<Integer> data) {

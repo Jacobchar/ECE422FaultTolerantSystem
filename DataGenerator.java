@@ -4,6 +4,7 @@ import java.util.Random;
 
 /* Java code to generate a random list of integers valued from 0-1000 */
 /* and then print those values to a filename.txt file                 */
+
 /* Jacob Charlebois, February 2016 */
 public class DataGenerator {
 

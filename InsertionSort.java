@@ -1,5 +1,6 @@
 import java.util.*;
 
+/* Jacob Charlebois, February 2016 */
 public class InsertionSort extends Thread {
 	
 	private int[] data;
