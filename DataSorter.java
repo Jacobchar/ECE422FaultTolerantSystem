@@ -28,6 +28,7 @@ public class DataSorter {
 		t.schedule(fido, timeLimit.longValue());
 		try {
 			primary.start();
+			System.out.println("Sorting via primary variat.");
 		} catch (ThreadDeath td) {
 			System.out.println("Primary variant timed out.\n");
 			primaryPass = false;
@@ -45,6 +46,7 @@ public class DataSorter {
 			t.schedule(fido, timeLimit.longValue());
 			try {
 				secondary.start();
+				System.out.println("Sorting via secondary variat.");
 			} catch (ThreadDeath td) {
 				System.out.println("Secondary variant timed out.\n");
 				secondaryPass = false;					
