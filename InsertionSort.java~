@@ -16,13 +16,7 @@ public class InsertionSort extends Thread {
 		try {
 			System.loadLibrary("insertionSort");
 			data = insertionSort(data, probability);
-			// If the array is empty than we know that with the probability 
-			// the sort has failed
-			if (data.length == 0){
-				isSorted = false;
-			} else {
-				isSorted = true;
-			}
+			isSorted = true;
 		} catch(ThreadDeath td) {
 			throw td;
 		}
