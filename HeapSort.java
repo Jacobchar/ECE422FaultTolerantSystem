@@ -19,7 +19,6 @@ public class HeapSort extends Thread {
 			heapSort(data);
 			double hazard = probability * memAccesses;
 			double r = Math.random();
-			System.out.println(r);
 			if(r > 0.5 && r < (0.5 + hazard)){
 				isSorted = false; // Variant has failed
 			} else {
@@ -29,6 +28,7 @@ public class HeapSort extends Thread {
 			isSorted = false; // Variant thread has been killed before file was sorted
 			throw td;
 		}
+
 	}
 
 	/* Getters and Setters */

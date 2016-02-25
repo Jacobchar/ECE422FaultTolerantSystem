@@ -15,10 +15,10 @@ extern "C" {
 #define InsertionSort_MAX_PRIORITY 10L
 /*
  * Class:     InsertionSort
- * Method:    insertionSort
+ * Method:    insertionsort
  * Signature: ([ID)[I
  */
-JNIEXPORT jintArray JNICALL Java_InsertionSort_insertionSort
+JNIEXPORT jintArray JNICALL Java_InsertionSort_insertionsort
   (JNIEnv *, jobject, jintArray, jdouble);
 
 #ifdef __cplusplus

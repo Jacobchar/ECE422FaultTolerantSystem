@@ -1,2 +1,0 @@
-# ECE422FaultTolerantSystem
-This repository holds my first project for ECE 422: Reliable &amp; Secure System Design. It implements a fault-tolerant sorting mechanism using recovery blocks.  There is a data generator that creates random integer values and writes them to a file, and a sorting program that reads that file, sorts the values, and writes them to another file. The sorting program is to be fault-tolerant, with a primary sorting routine written in Java, and a backup sorting routine written in C. The C routine is to be called as a native method from within Java. 

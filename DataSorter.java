@@ -21,22 +21,32 @@ public class DataSorter {
 
 		Boolean primaryPass = null;
 		Boolean secondaryPass = null;
+		Boolean timeout = false;
 
 		HeapSort primary = new HeapSort(dataList, probPrimFail);
 		Timer t = new Timer();
 		Watchdog fido = new Watchdog(primary);
 		t.schedule(fido, timeLimit.longValue());
+		
 		try {
 			primary.start();
-			System.out.println("Sorting via primary variat.");
+			System.out.println("Sorting via primary variant.");
 		} catch (ThreadDeath td) {
 			System.out.println("Primary variant timed out.\n");
-			primaryPass = false;
+			timeout = true;
 		}
 
 		ArrayList<Integer> sortedData = primary.getData();
+		
+		try {
+			primary.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
-		if(!acceptanceTest(sortedData)) {
+		primaryPass = primary.isSorted();
+
+		if(!acceptanceTest(sortedData) || timeout || !primaryPass) {
 			System.out.println("Primary variant failed, attempting secondary . . .");
 			// Run secondary variant
 			int[] list = makeIntArray(dataList);
@@ -46,15 +56,24 @@ public class DataSorter {
 			t.schedule(fido, timeLimit.longValue());
 			try {
 				secondary.start();
-				System.out.println("Sorting via secondary variat.");
+				System.out.println("Sorting via secondary variant.");
 			} catch (ThreadDeath td) {
 				System.out.println("Secondary variant timed out.\n");
-				secondaryPass = false;					
+				timeout = false;					
 			}
+
 			sortedData = makeArrayList(secondary.getData());
+
+			try {
+				secondary.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			secondaryPass = secondary.isSorted();
 		}
 
-		if(acceptanceTest(sortedData)) {
+		if(acceptanceTest(sortedData) && !timeout && (primaryPass || secondaryPass)) {
 			writeFile(sortedData, outputFileName);
 		} else {
 			System.out.println("Both variants have failed \nTerminating program.");
@@ -63,6 +82,7 @@ public class DataSorter {
 				file.delete();
 			}
 		}
+		System.exit(0);
 	}
 
 	/* Method to pass an int array to our JNI called method */
@@ -78,7 +98,7 @@ public class DataSorter {
 	private static ArrayList<Integer> makeArrayList(int[] data) {
 		ArrayList<Integer> array = new ArrayList<Integer>();
 		for(int i = 0; i < data.length; i++) {
-			array.set(i, data[i]);
+			array.add(data[i]);
 		}
 		return array;
 	}

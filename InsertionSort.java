@@ -9,13 +9,13 @@ public class InsertionSort extends Thread {
 	public InsertionSort(int[] buf, double probSecFail) {
 		data = buf;
 		isSorted = false;
-		probSecFail = probability;
+		probability = probSecFail;
 	}
 
 	public void run() {
 		try {
-			System.loadLibrary("insertionSort");
-			data = insertionSort(data, probability);
+			System.loadLibrary("insertionsort");
+			data = insertionsort(data, probability);
 			// If the array is empty than we know that with the probability 
 			// the sort has failed
 			if (data.length == 0){
@@ -38,6 +38,6 @@ public class InsertionSort extends Thread {
 	}
 
 	/* Initialization of native method to be called in C */
-	public native int[] insertionSort(int[] buf, double p);
+	public native int[] insertionsort(int[] buf, double p);
 
 }
